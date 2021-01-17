@@ -49,5 +49,12 @@ g.addEdge('B','D')
 g.addEdge('D','E')
 g.addEdge('E','B')
 
+g.addEdge('B','A')
+g.addEdge('C','B')
+g.addEdge('C','A')
+g.addEdge('D','B')
+g.addEdge('E','D')
+g.addEdge('B','E')
+
 res = g.isCyclic()
 print(res)
