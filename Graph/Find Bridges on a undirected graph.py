@@ -1,7 +1,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
 
-
+@dataclass
 class Info():
     inTime:int=None
     lowTime:int=None
@@ -47,7 +47,7 @@ class Graph:
         info = defaultdict(Info)
         bridges = []
 
-        for vertex in self.graph:
+        for vertex in list(self.graph):
             if visited[vertex] == False:
                 self.dfs(vertex, None, visited, info, bridges)
         
@@ -56,9 +56,18 @@ class Graph:
 
 if __name__ == "__main__":
     g = Graph()
+    # g.addEdge(1, 2)
+    # g.addEdge(3, 2)
+    # g.addEdge(4, 2)
+    # g.addEdge(3, 4)
     g.addEdge(1, 2)
-    g.addEdge(3, 2)
-    g.addEdge(4, 2)
+    g.addEdge(1, 3)
+    g.addEdge(2, 3)
     g.addEdge(3, 4)
+    g.addEdge(4, 5)
+    g.addEdge(5, 6)
+    g.addEdge(5, 7)
+    g.addEdge(6, 7)
+    g.addEdge(6, 8)
 
     g.findBridges()
