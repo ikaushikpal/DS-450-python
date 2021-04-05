@@ -1,6 +1,6 @@
 from collections import defaultdict
 from dataclasses import dataclass
-
+from runTime import runTime
 
 class Info():
     inTime:int=None
@@ -41,7 +41,8 @@ class Graph:
         print("Total number of bridges in graph are :",len(bridges))
         for u,v in bridges:
             print(f"bridge {u} -> {v}")
-            
+
+    @runTime        
     def findBridges(self):
         visited = defaultdict(bool)
         info = defaultdict(Info)
