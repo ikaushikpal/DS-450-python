@@ -1,7 +1,3 @@
-# Python program to delete a given key from
-# linked list.
-
-# Node of a doubly linked list
 class Node:
 	def __init__(self, next = None, data = None):
 		self.next = next
@@ -49,8 +45,36 @@ def printList( head):
 
 # Function to delete a given node from the list
 def deleteNode(head, key) :
-    
+	if head is None:
+		return None
 
+	prev_node, next_node = None, None
+	current_node = head
+	tempHead = head
+
+	while next_node != tempHead:
+		next_node = current_node.next
+		if current_node.data == key:
+			break
+		prev_node = current_node
+		current_node = next_node
+
+	# if key node is in between 2nd node to last node
+	if prev_node:
+		prev_node.next = next_node
+		return head
+
+	# if ll has only 1 node and that node need to delete
+	if next_node == current_node:
+		return None
+
+	# if key node is first node of circular ll
+	if current_node == head:
+		while current_node.next != head:
+			current_node = current_node.next
+		
+		current_node.next = next_node
+		return next_node
 
 head = None
 head = push(head, 2)
@@ -62,7 +86,7 @@ head = push(head, 10)
 print("List Before Deletion: ")
 printList(head)
 
-head = deleteNode(head, 7)
+head = deleteNode(head, 10)
 
 print( "List After Deletion: ")
 printList(head)
