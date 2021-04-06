@@ -68,8 +68,8 @@ class Topdown:
 
 
 if __name__ == "__main__":
-    coin = [2, 5, 3, 6]
-    sum = 10
+    coin = [1, 2, 3]
+    sum = 5
     n = len(coin)
 
     t = Topdown()
