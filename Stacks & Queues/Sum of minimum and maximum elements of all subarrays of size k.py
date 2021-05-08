@@ -1,50 +1,64 @@
 from collections import deque
 
+def minimumSubArray(arr, n, k):
+    i = j = 0
+    queue = deque()
+    res = []
+
+    while j < n:
+        while len(queue) and arr[queue[-1]] > arr[j]:
+            queue.pop()
+        queue.append(j)
+
+        if  j-i+1 < k:
+            j += 1
+        else:
+            res.append(arr[queue[0]])
+            if queue[0] == i:
+                queue.popleft()
+            
+            i += 1
+            j += 1
+    
+    return res
+
+def maximumSubArray(arr, n, k):
+    i = j = 0
+    queue = deque()
+    res = []
+
+    while j < n:
+        while len(queue) and arr[queue[-1]] < arr[j]:
+            queue.pop()
+        queue.append(j)
+
+        if  j-i+1 < k:
+            j += 1
+        else:
+            res.append(arr[queue[0]])
+            if queue[0] == i:
+                queue.popleft()
+            
+            i += 1
+            j += 1
+    
+    return res
 
 def min_max_subArray(arr, k, n):
-    min_q = deque()
-    max_q = deque()
+    mini = minimumSubArray(arr, n, k)
+    maxi = maximumSubArray(arr, n, k)
 
-    total_sum = 0
-    for i in range(k):
-        if len(max_q) == 0 and len(min_q) == 0:
-            max_q.append((i, arr[i]))
-            min_q.append((i, arr[i]))
-        
-        elif arr[i] > max_q[-1][1]:
-            max_q.append((i, arr[i]))
-        elif arr[i] < min_q[-1][1]:
-            min_q.append((i, arr[i]))
+    tot = 0
+    for i in range(n-k+1):
+        tot += mini[i] + maxi[i]
 
-    total_sum += min_q[-1][1] + max_q[-1][1]
-
-    for i in range(k, n):
-        s_range = i-k+1
-
-        minI = minVal = None
-        if len(min_q) > 0:
-            minI, minVal = min_q[0]
-
-        if minI:
-            if minI < s_range:
-                min_q.popleft()
-
-            if arr[i] < min_q[-1]:
-                min_q.append((i, arr[i]))
+    return tot
             
-            
-                
-
-            
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     arr = [2, 5, -1, 7, -3, -1, -2]
     k = 4
     n = len(arr)
+
+    print(min_max_subArray(arr, k, n))
+    
