@@ -33,15 +33,13 @@ def longestString(arr, n, k):
             j += 1
                 
     return max_window
-            
+
+
+def pickToys(toys):
+    return longestString(toys, len(toys), 2)
+
 
 if __name__ == '__main__':
-    s = 'aabacbebebe'
-    k = 3
-    n = len(s)
-    print(longestString(s, n, k))
-
-    s = 'aabcbcdbca'
-    n = len(s)
-    k = 2
-    print(longestString(s, n, k))
+    toys = 'abaccab'
+    print(pickToys(toys))
+    

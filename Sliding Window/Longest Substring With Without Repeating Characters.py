@@ -57,9 +57,9 @@ def longestSubStringWithoutRepeating2(string):
                 if hashMap[char] == 0:
                     del hashMap[char]
                 i += 1
-
             max_window = max(max_window, current_window)
-        
+            j += 1
+            
     return max_window
 
 if __name__ == "__main__":
