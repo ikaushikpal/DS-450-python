@@ -21,3 +21,7 @@ class Solution:
             b >>= 1
 
         return counter 
+
+if __name__ == '__main__':
+    sol = Solution()
+    print(sol.countBitsFlip(3, 1))
