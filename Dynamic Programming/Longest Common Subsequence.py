@@ -17,14 +17,17 @@ class Memoization():
         if n == 0 or m == 0:
             return 0
 
-        if a[n-1] == b[m-1]:
-            self.dp[n][m] = self.longestCommonSub_util(a, n-1, b, m-1) + 1
+        if self.dp[n][m]:
             return self.dp[n][m]
+
+        elif a[n-1] == b[m-1]:
+            self.dp[n][m] = self.longestCommonSub_util(a, n-1, b, m-1) + 1
 
         else:
             self.dp[n][m] = max(self.longestCommonSub_util(
                 a, n-1, b, m), self.longestCommonSub_util(a, n, b, m-1))
-            return self.dp[n][m]
+
+        return self.dp[n][m]
 
 
 class BottomUp():
@@ -42,8 +45,8 @@ class BottomUp():
 
 
 if __name__ == '__main__':
-    a = "AGGTAB"
-    b = "GXTXAYB"
+    a = "abcd"
+    b = "abce"
     n = len(a)
     m = len(b)
 
