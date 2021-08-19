@@ -56,9 +56,50 @@ class Solution:
 
         return outputString
 
+class SolutionAdi:
+    def longestCommonSub(self, a, n, b, m):
+        dp = [[0]*(m+1) for i in range(n+1)]
+        output_string = ''
+
+        for i in range(1, n+1):
+            for j in range(1, m+1):
+                if a[i-1] == b[j-1]:
+                    dp[i][j] = dp[i-1][j-1] + 1
+                else:
+                    dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+
+        return dp
+
+    def shortestCommonSupersequence(self, str1: str, str2: str) -> str:
+        m = len(str1)
+        n = len(str2)
+        lcsTable = self.longestCommonSub(str1, m, str2, n)
+        
+        i, j = m, n
+        outputString = ""
+
+        while i and j:
+            if str1[i-1] == str2[j-1]:
+                outputString += str1[i-1]
+                i -= 1
+                j -= 1
+            
+            elif lcsTable[i][j-1] > lcsTable[i-1][j]:
+                outputString += str2[j-1]
+                j -= 1
+            
+            else:
+                outputString += str1[i-1]
+                i -= 1
+        
+        outputString += str1[:i]
+        outputString += str2[:j]
+
+        return outputString
 
 if __name__ =='__main__':
     str1 = "abac"
     str2 = "cab"
 
     print(Solution().shortestCommonSupersequence(str1, str2))
+    print(SolutionAdi().shortestCommonSupersequence(str1, str2))
