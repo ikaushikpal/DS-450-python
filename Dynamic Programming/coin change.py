@@ -67,6 +67,23 @@ class Topdown:
         return self.dp[n][sum]
 
 
+# Bottom-Up solution
+# time complexity : O(n*sum)
+# space complexity : O(sum)
+
+
+class Solution:
+    def coin_change(self, coins, n, targetSum):
+        dp = [0] * (targetSum + 1)
+        dp[0] = 1
+
+        for i in range(1, n + 1):
+            for j in range(coins[i - 1], targetSum + 1):
+                dp[j] += dp[j - coins[i - 1]]
+
+        return dp[targetSum]
+        
+
 if __name__ == "__main__":
     coin = [1, 2, 3]
     sum = 5
@@ -74,3 +91,5 @@ if __name__ == "__main__":
 
     t = Topdown()
     print(t.coin_change(coin, n, sum))
+
+    print(Solution().coin_change([2,3,5], 3, 7))
