@@ -20,6 +20,16 @@ class BottomUp():
                     self.dp[i][j] = self.dp[i-1][j]
 
         return self.dp[n][w]
+    
+    # Space : O(W)
+    def knapSack(self, N, W, val, wt):
+        dp = [0] * (W+1)
+        for i in range(1, N+1):
+            for j in range(1, W+1):
+                if j - wt[i-1] >= 0:
+                    dp[j] = max(dp[j], val[i-1] + dp[j - wt[i-1]])
+        
+        return dp[W]
 
 
 if __name__=='__main__':

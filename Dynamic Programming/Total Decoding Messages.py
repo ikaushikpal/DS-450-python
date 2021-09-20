@@ -1,29 +1,41 @@
 class Solution:
-    def CountWays(self, string):
+    def numDecodings(self, string: str) -> int:
         n = len(string)
-        dp = [0] * n
         
+        if string[0] == '0':
+            return 0
+        
+        dp = [0] * n
         dp[0] = 1
 
-        if int(string[0:2]) <= 26:
-            dp[1] = 2
-        else:
-            dp[1] = 1
-
-        for i in range(2, n):
-            if string[i] == '0':
+        for i in range(1, n):
+            if string[i-1] == '0' and string[i] == '0':
+                dp[i] = 0
+            
+            elif string[i-1] == '0' and string[i] != '0':
                 dp[i] = dp[i-1]
+
+            elif string[i-1] != '0' and string[i] == '0':
+                if int(string[i-1:i+1]) <= 26:
+                    if i>=2:
+                        dp[i] = dp[i-2]
+                    else:
+                        dp[i] = 1
+                else:
+                    dp[i] = 0
             
             else:
-                dp[i] = dp[i-1]
-                if string[i-1] != '0':
-                    x = int(string[i-1 : i+1])
-                    if 1<=x<=26:
-                        dp[i] += dp[i-2]
-        
+                if int(string[i-1:i+1]) <= 26:
+                    if i>=2:
+                        dp[i] = dp[i-2] + dp[i-1]
+                    else:
+                        dp[i] = dp[i-1] + 1
+                else:
+                    dp[i] = dp[i-1]
+            
         return dp[n-1]
 
 
 if __name__ == '__main__':
     s = "231011"
-    print(Solution().CountWays(s))
+    print(Solution().numDecodings(s))
