@@ -21,9 +21,23 @@ class Topdown:
 
         return self.dp[n][N]
 
+class Solution:
+    def cutRibbon(self, ribbons:list, ribbonLength:int, n:int)->int:
+        dp = [0] * (ribbonLength+1)
+        dp[0] = 1
+
+        for j in range(1, ribbonLength+1):
+            for ribbon in ribbons:
+                if j-ribbon >= 0:
+                    dp[j] = max(dp[j], 1+dp[j-ribbon])
+
+        return dp[ribbonLength]
+
+
 if __name__ == '__main__':
-    N = 7
-    a, b, c = 5, 5, 2
+    N = 16
+    a, b, c = 7, 5, 3
     t = Topdown()
+    print(Solution().cutRibbon([a,b,c], N, 3))
 
     print(t.ribbon_cut(N, a, b, c))
