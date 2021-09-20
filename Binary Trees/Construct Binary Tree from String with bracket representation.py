@@ -9,12 +9,16 @@ class Solution:
         if len(string) == 0:
             return None
         
-        root = string[0]
-        self.newString = []
-        self.buildUpdatedString(string, 1)
+        self.root = string[0]
+        self.string = string
+        self.index = 0
+        self.buildUpdatedString()
     
-    def buildUpdatedString(self, string, index):
-        if index == len(string):
-            return
+    def buildUpdatedString(self):
+        if self.string[self.index].isdigit():
+            node = Node(int(self.string[self.index]))
+
+        
+        
         
         
