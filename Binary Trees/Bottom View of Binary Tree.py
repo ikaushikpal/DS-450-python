@@ -15,8 +15,8 @@ from collections import deque
 
 class Solution:
     
-    def topView(self, root): 
-        # to find topview we must use level order because it is mandatory to maintain order
+    def bottomView(self, root): 
+        # to find bottom we must use level order because it is mandatory to maintain order
         # see vertical traversal first
 
         outerQueue = deque([NodeInfo(root, 0)])
@@ -48,8 +48,6 @@ class Solution:
                     outerQueue.append(NodeInfo(currNode.node.right, newLoc))
         
         for i in range(minIndex, maxIndex+1):
-            output_list.append(storedPos[i][0])
+            output_list.append(storedPos[i][-1])
         
         return output_list
-
-
