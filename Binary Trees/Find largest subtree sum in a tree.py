@@ -66,3 +66,7 @@ if __name__ == '__main__':
     root.right.right = Node(2)
 
     print(Solution().largestSubTreeSum(root))
+
+    # Time Complexity: O(n), where n is number of nodes. 
+    # Auxiliary Space: O(n), function call stack size.
+

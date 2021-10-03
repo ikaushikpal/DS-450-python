@@ -4,6 +4,7 @@ class Node:
         self.left = None
         self.right = None
 
+
 class NodeInfo:
     def __init__(self, node, loc):
         self.node = node
@@ -14,28 +15,18 @@ from collections import deque
 
 
 class Solution:
-    
-    def topView(self, root): 
-        # to find topview we must use level order because it is mandatory to maintain order
-        # see vertical traversal first
 
+    def getLength(self, root): 
+        # copied from vertical traversal of binary tree
         outerQueue = deque([NodeInfo(root, 0)])
         innerQueue = deque([])
-        storedPos = {}
         minIndex = maxIndex = 0
-        output_list = []
 
         while len(outerQueue):
             innerQueue, outerQueue = outerQueue, innerQueue
             
             while len(innerQueue):
                 currNode = innerQueue.popleft()
-
-                if currNode.loc not in storedPos:
-                    storedPos[currNode.loc] = [currNode.node.data]
-                else:
-                    storedPos[currNode.loc].append(currNode.node.data)
-
 
                 if currNode.node.left:
                     newLoc =  currNode.loc-1
@@ -47,9 +38,35 @@ class Solution:
                     maxIndex = max(newLoc, maxIndex)
                     outerQueue.append(NodeInfo(currNode.node.right, newLoc))
         
-        for i in range(minIndex, maxIndex+1):
-            output_list.append(storedPos[i][0])
-        
-        return output_list
+        return maxIndex - minIndex + 1
 
+if __name__ == '__main__':
+    #     Input : 
+    #              7
+    #            /  \
+    #           6    5
+    #          / \  / \
+    #         4   3 2  1 
+    # Output :
+    # 5
 
+    root = Node(7) 
+    root.left = Node(6) 
+    root.right = Node(5) 
+    root.left.left = Node(4) 
+    root.left.right = Node(3) 
+    root.right.left = Node(2) 
+    root.right.right = Node(1) 
+  
+    print(Solution().getLength(root))
+    
+    # Input :
+    #            1
+    #          /    \
+    #         2       3
+    #        / \     / \
+    #       4   5   6   7
+    #                \   \ 
+    #                 8   9 
+    # Output :
+    # 6

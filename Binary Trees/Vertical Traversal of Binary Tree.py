@@ -15,10 +15,12 @@ from collections import deque
 
 class Solution:
     
-    def topView(self, root): 
-        # to find topview we must use level order because it is mandatory to maintain order
-        # see vertical traversal first
+    #Function to find the vertical order traversal of Binary Tree.
+    def verticalOrder(self, root): 
+        if root is None:
+            return []
 
+        # to find vertical order we must use level order because it is mandatory to maintain order
         outerQueue = deque([NodeInfo(root, 0)])
         innerQueue = deque([])
         storedPos = {}
@@ -48,7 +50,7 @@ class Solution:
                     outerQueue.append(NodeInfo(currNode.node.right, newLoc))
         
         for i in range(minIndex, maxIndex+1):
-            output_list.append(storedPos[i][0])
+            output_list.extend(storedPos[i])
         
         return output_list
 
