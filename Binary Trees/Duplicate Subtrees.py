@@ -1,43 +1,55 @@
+# Given a binary tree of size N, your task is to that find all duplicate subtrees from the given binary tree.
+
+
+# Example:
+# Input : 
+# Output : 2 4
+#          4
+# Explanation: Above Trees are two 
+# duplicate subtrees.i.e  and 
+# Therefore,you need to return above trees 
+# root in the form of a list.
+
 class Node:
     def __init__(self,val):
-        self.data = val
-        self.left = None
-        self.right = None
+        self.data=val
+        self.left=None
+        self.right=None
 
-class Info:
-    def __init__(self, root=None, count=1):
-        self.root = root
-        self.count = count
-
-
-class Info:
-    def __init__(self, root=None, count=1):
-        self.root = root
-        self.count = count
+    def __str__(self):
+        return self.data
+    
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 class Solution:
-    def update(self, s, root):
-        if s in self.storedAddress:
-            self.storedAddress[s].count += 1
-        else:
-            self.storedAddress[s] = Info(root, 1)
-            
-    def dupSubUtil(self, root):
+    def dfs(self, root):
         if root is None:
-            return '$'
+            return '#'
         
-        s = f"!{str(root.val)}{self.dupSubUtil(root.left)}{self.dupSubUtil(root.right)}!"       
-        self.update(s, root)
+        pattern = '$' + str(root.data) + self.dfs(root.left) + self.dfs(root.right) + '#'
+        self.addPattern(pattern, root)
+        return pattern
+    
+    
+    def addPattern(self, pattern, root):
+        if pattern in self.patterns and self.patterns[pattern] == 1:
+            self.dups.append(root)
             
-        return s
+        if pattern not in self.patterns:
+            self.patterns[pattern] = 1
+        else:
+            self.patterns[pattern] += 1
 
-    def findDuplicateSubtrees(self, root):
-        self.storedAddress = {}
-        self.dupSubUtil(root)
+    def printAllDups(self, root):
+        if root is None:
+            return []
 
-        return [val.root for val in self.storedAddress.values() if val.count>1]
-
+        self.patterns = {}
+        self.dups = []
+        self.dfs(root)
+        return self.dups
 
 
 if __name__ == '__main__':
@@ -48,4 +60,19 @@ if __name__ == '__main__':
     root.left.left = Node(11)
     root.right.left = Node(1)
 
+    print(Solution().printAllDups(root))
+
+    root = Node(1)
+    root.left = Node(0)
+    root.right = Node(0)
+    root.left.left = Node(0)
+    root.left.right = Node(0)
+
+    root.left.left.left = Node(0)
+    root.left.left.right = Node(0)
+
+    root.left.right.left = Node(0)
+    root.left.right.right = Node(0)
+
+    root.left.left.left.left = Node(0)
     print(Solution().printAllDups(root))
