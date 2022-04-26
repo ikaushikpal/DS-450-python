@@ -66,3 +66,5 @@ if __name__ == '__main__':
     hist = [6, 2, 5, 4, 5, 1, 6]
     res = maximumArea(hist)
     print(res)
+    print(maximumArea([6, 7, 3, 4, 5, 1, 3]))
+    print(maximumArea([1, 2, 6, 4, 5, 3, 4]))
