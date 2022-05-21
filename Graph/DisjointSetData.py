@@ -5,6 +5,7 @@ class Disjoint:
 
     def add(self):
         self.array.append(-1)
+        self.n += 1
 
     def find(self, n):
         if self.array[n] < 0:

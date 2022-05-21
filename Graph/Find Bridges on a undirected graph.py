@@ -24,15 +24,15 @@ class Graph:
             if parentVertex == neighbour:
                 continue # just a edge to its parent
 
-            elif visited[neighbour]:#meaning it found a back edge
+            elif visited[neighbour]:# meaning it found a back edge
                 info[currentVertex].lowTime = min(info[currentVertex].lowTime, info[neighbour].inTime)
-                #update backedges property
+                # update backedges property
 
-            else: #forwards edge
+            else: # forwards edge
                 self.dfs(neighbour, currentVertex, visited, info, bridges)
-                if info[currentVertex].inTime < info[neighbour].lowTime: #find bridge condition
-                    bridges.append((currentVertex, neighbour))
                 info[currentVertex].lowTime = min(info[currentVertex].lowTime, info[neighbour].lowTime)
+                if info[currentVertex].inTime < info[neighbour].lowTime: # find bridge condition
+                    bridges.append((currentVertex, neighbour))
 
     def  printBridges(self, bridges):
         if len(bridges) == 0:
