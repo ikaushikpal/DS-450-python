@@ -58,39 +58,39 @@ class BFS:
         return (cnt == 0)
 
     def removeInvalidParenthesis(self, str):
-	if (len(str) == 0):
-		return
+        if (len(str) == 0):
+            return
 		
-	visit = set()
-	
-	q = []
-	temp = 0
-	level = 0
-	
-	q.append(str)
-	visit.add(str)
-
-	while(len(q)):
-
-		str = q[0]
-		q.pop()
+        visit = set()
         
-		if (self.isValidString(str)):
-			print(str)
-			level = True
+        q = []
+        temp = 0
+        level = 0
+        
+        q.append(str)
+        visit.add(str)
 
-		if (level):
-			continue
+        while(len(q)):
 
-		for i in range(len(str)):
-			if (not self.isParenthesis(str[i])):
-				continue
+            str = q[0]
+            q.pop()
+            
+            if (self.isValidString(str)):
+                print(str)
+                level = True
 
-			temp = str[0:i] + str[i + 1:]
+            if (level):
+                continue
 
-			if temp not in visit:
-				q.append(temp)
-				visit.add(temp)
+            for i in range(len(str)):
+                if (not self.isParenthesis(str[i])):
+                    continue
+
+                temp = str[0:i] + str[i + 1:]
+
+                if temp not in visit:
+                    q.append(temp)
+                    visit.add(temp)
 
 
 if __name__ == '__main__':

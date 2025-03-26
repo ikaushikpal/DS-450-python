@@ -8,7 +8,7 @@ class Solution:
 
         C = []
         while ptr1< n1 and ptr2<n2:
-            if ptr1< n1 and ptr2<n2 and A[ptr1] == B[ptr2]:
+            if A[ptr1] == B[ptr2]:
                 while ptr1< n1 and ptr2<n2 and A[ptr1] == B[ptr2]:
                     C.append(A[ptr1])
                     ptr1 += 1

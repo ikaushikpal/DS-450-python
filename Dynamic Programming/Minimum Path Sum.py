@@ -1,3 +1,19 @@
+# Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.
+
+# Note: You can only move either down or right at any point in time.
+
+
+# Example 1:
+# Input: grid = [[1,3,1],[1,5,1],[4,2,1]]
+# Output: 7
+# Explanation: Because the path 1 → 3 → 1 → 1 → 1 minimizes the sum.
+
+
+# Example 2:
+# Input: grid = [[1,2,3],[4,5,6]]
+# Output: 12
+
+
 from typing import List
 
 
@@ -91,10 +107,28 @@ class Solution:
         
         return grid[0][0]
                 
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        M, N = len(grid), len(grid[0])
         
-
+        currentRow = [0]*N
+        prevRow = [0]*N
         
+        for i in range(M-1, -1, -1):
+            prevRow, currentRow = currentRow, prevRow
 
+            for j in range(N-1, -1, -1):
+                if i == M-1 and j == N-1:
+                    currentRow[j] = grid[i][j]
+                elif i == M-1:
+                    currentRow[j] = currentRow[j+1] + grid[i][j]
+                elif j == N-1:
+                    currentRow[j] = prevRow[j] + grid[i][j]
+                else:
+                    currentRow[j] = min(currentRow[j+1], prevRow[j]) + grid[i][j]
+        return currentRow[0]
+# Time Complexity: O(M*N)
+# Space Complexity: (N)
 
 
 if __name__ == '__main__':

@@ -56,5 +56,5 @@ root.left = Node(2)
 root.right = Node(3)
 A= []
 
-serialize(root, A)
+print(serialize(root, A))
 deSerialize(A)

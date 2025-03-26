@@ -15,6 +15,21 @@
 # {1,3}, {2} : 1 and 3 are paired but 2 is single.
 # Note that {1,2} and {2,1} are considered same. (Meaning No permutations)
 
+class Memo:
+    def helper(self, n):
+        if n == 1 or n == 0:
+            return 1
+        
+        if n in self.memo:
+            return self.memo[n] 
+        
+        self.memo[n] = self.helper(n-1) + (n-1) * self.helper(n-2)
+        return self.memo[n]
+
+    def countFriendsPairings(self, n):
+        self.memo = {}
+        return self.helper(n)
+
 
 class Solution:
     def countFriendsPairings(self, n):
@@ -34,3 +49,4 @@ class Solution:
 if __name__ == '__main__':
     n = 4
     print(Solution().countFriendsPairings(n))
+    print(Memo().countFriendsPairings(n))

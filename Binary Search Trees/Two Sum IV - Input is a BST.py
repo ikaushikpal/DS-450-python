@@ -22,6 +22,9 @@ class TreeNode:
         self.left = left
         self.right = right
 
+    def __repr__(self):
+        return str(self.val)
+
 
 class BSTIterator:
 
@@ -80,6 +83,33 @@ class Solution:
                 rightVal = right.next()
 
         return False
+
+class Solution1:
+    def inorder(self, root, direction):
+        if root is None:
+            return
+        
+        left, right = (root.left, root.right)[::direction]
+        yield from self.inorder(left, direction)
+        yield root.val
+        yield from self.inorder(right, direction)
+            
+    def findTarget(self, root: Optional[TreeNode], k: int) -> bool:
+        leftGen, rightGen = self.inorder(root, 1), self.inorder(root, -1)
+        ptr1, ptr2 = next(leftGen), next(rightGen)
+        
+        while ptr1 < ptr2:
+            total = ptr1 + ptr2
+            if total == k:
+                return True
+            elif total < k:
+                ptr1 = next(leftGen)
+            else:
+                ptr2 = next(rightGen)
+        return False
+# Using Generators
+# T.C. = O(n)
+# S.C. = O(h)
 
 
 if __name__ == "__main__":

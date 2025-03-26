@@ -34,6 +34,8 @@ if __name__ == '__main__':
     root.right = Node(30)
     root.right.left = Node(30)
 
+    preOrder(root)
+    print()
     root = Solution().transformNormal(root)
 
     preOrder(root)

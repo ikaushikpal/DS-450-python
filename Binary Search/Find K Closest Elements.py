@@ -17,61 +17,45 @@
 # Output: [1,2,3,4]
 
 
+import bisect
+from collections import deque
 from typing import List
 
 
 class Solution:
-    def findCeil(self, arr, n, key):
-        if key > arr[n-1]: return n-1
-        low, high = 0, n-1
-        res = -1
-
-        while low <= high:
-            mid = (low+high)//2
-
-            if arr[mid] == key:
-                return mid
-            
-            elif arr[mid] < key:
-                low = mid + 1       
-            else:
-                res = mid
-                high = mid - 1
-
-        return res
-    
     def findClosestElements(self, arr: List[int], k: int, x: int) -> List[int]:
+        def calcDist(x1, x2):
+            return abs(x1 - x2)
+
         N = len(arr)
-        ans = []
-        
-        pos = self.findCeil(arr, N, x)
-        l = r = pos
-        if arr[pos] == x:
-            ans.append(x)
-            r = (r + 1) % N  
-        l = (l - 1 + N) % N
-        
+        k = min(k, N)
+        index = bisect.bisect_left(arr, x) - 1
+        i, j = index, (index + 1) % N
+        ans = deque()
+
         while len(ans) < k:
-            left_val, right_val = arr[l], arr[r]
-            
-            if abs(left_val - x) < abs(right_val - x):
-                ans.append(left_val)
-                l = (l - 1 + N) % N
+            iDist = calcDist(arr[i], x)
+            jDist = calcDist(arr[j], x)
 
-            elif abs(left_val - x) > abs(right_val - x):
-                ans.append(right_val)
-                r = (r + 1) % N
+            if iDist < jDist:
+                ans.appendleft(arr[i])
+                i = (i - 1 + N) % N
 
-            elif left_val < right_val:
-                ans.append(left_val)
-                l = (l - 1 + N) % N
+            elif iDist > jDist:
+                ans.append(arr[j])
+                j = (j + 1) % N
 
+            elif arr[i] <= arr[j]:
+                ans.appendleft(arr[i])
+                i = (i - 1 + N) % N
+                
             else:
-                ans.append(right_val)
-                r = (r + 1) % N
-        
-        ans.sort()
+                ans.append(arr[j])
+                j = (j + 1) % N
         return ans
+# TC = O(min(K, N))
+# SC = O(min(K, N))
+
 
 if __name__ == '__main__':
     sol = Solution()

@@ -12,25 +12,42 @@ class TreeNode:
 
 
 class Solution:
-    def allPossibleFBTUtil(self, n):
-        if n == 1:
-            return deque([TreeNode(0)])  
+    def cloneTree(self, root):
+        if root is None:
+            return None
         
-        res = deque()
+        newRoot = TreeNode(root.val)
+        newRoot.left = self.cloneTree(root.left)
+        newRoot.right = self.cloneTree(root.right)
+        return newRoot
+    
+    def dfs(self, n):
+        if n <= 0 or n%2 == 0:
+            return []
+        
+        if n == 1:
+            return [TreeNode(0)]
         
         if n in self.memo:
             return self.memo[n]
         
+        ans = []
         for i in range(1, n, 2):
-            left = self.allPossibleFBTUtil(i)
-            right = self.allPossibleFBTUtil(n-i-1)
+            leftTree = self.dfs(i)
+            rightTree = self.dfs(n - i - 1)
             
-            for l,r in product(left, right):
-                res.append(TreeNode(0, l, r))
+            
+            for j in range(len(leftTree)):
+                for k in range(len(rightTree)):
+                    root = TreeNode(0)
+                    
+                    root.left = self.cloneTree(leftTree[j])
+                    root.right = self.cloneTree(rightTree[k])
+                    
+                    ans.append(root)
+        self.memo[n] = ans
+        return ans
         
-        self.memo[n] = res
-        return res
-    
     def allPossibleFBT(self, n: int) -> List[Optional[TreeNode]]:
         self.memo = {}
-        return self.allPossibleFBTUtil(n)
+        return self.dfs(n)

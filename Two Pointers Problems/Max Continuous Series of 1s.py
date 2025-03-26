@@ -40,4 +40,4 @@ if __name__ == '__main__':
     arr = [ 1, 1, 0, 1, 1, 0, 0, 1, 1, 1  ]
     B = 1
 
-    print(Solution().solve(arr, B))
+    print(Solution().maxone(arr, B))

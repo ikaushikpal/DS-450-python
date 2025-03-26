@@ -1,108 +1,100 @@
+# Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+
+# Implement the LRUCache class:
+
+# LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+# int get(int key) Return the value of the key if the key exists, otherwise return -1.
+# void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+# The functions get and put must each run in O(1) average time complexity.
+
+ 
+
+# Example 1:
+
+# Input
+# ["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]
+# [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
+# Output
+# [null, null, null, 1, null, -1, null, -1, 3, 4]
+
+# Explanation
+# LRUCache lRUCache = new LRUCache(2);
+# lRUCache.put(1, 1); // cache is {1=1}
+# lRUCache.put(2, 2); // cache is {1=1, 2=2}
+# lRUCache.get(1);    // return 1
+# lRUCache.put(3, 3); // LRU key was 2, evicts key 2, cache is {1=1, 3=3}
+# lRUCache.get(2);    // returns -1 (not found)
+# lRUCache.put(4, 4); // LRU key was 1, evicts key 1, cache is {4=4, 3=3}
+# lRUCache.get(1);    // return -1 (not found)
+# lRUCache.get(3);    // return 3
+# lRUCache.get(4);    // return 4
+
 from collections import defaultdict, OrderedDict
 
 
-class Node:
-    def __init__(self, data, hash_value):
-        self.data = data
-        self.hashKey = hash_value
-        self.prev = None
-        self.next = None
-
-
 class DLL:
-    def __init__(self, maxLength):
-        self.maxLength = maxLength
+    class Node:
+        def __init__(self, key, data, left=None, right=None):
+            self.key = key
+            self.data = data
+            self.left = left
+            self.right = right
+
+    def __init__(self):
+        self.head = DLL.Node(None, None)
+        self.tail = DLL.Node(None, None)
+        self.head.right = self.tail
+        self.tail.left = self.head
         self.len = 0
-        self.LRU_ptr = None
-        self.MRU_ptr = None
+    
+    def delete(self, node):
+        leftNode, rightNode = node.left, node.right
+        leftNode.right = rightNode
+        rightNode.left = leftNode
+        self.len -= 1
+        key, value = node.key, node.data
+        del node
+        return (key, value)
+    
+    def deleteLast(self):
+        return self.delete(self.tail.left)
 
-    def pushPage(self, data, hash_key):
-        newNode = Node(data, hash_key)
-        preHash = None
-
-        if self.MRU_ptr == None:
-            self.MRU_ptr = self.LRU_ptr = newNode
-            self.len += 1
-
-        else:
-            if self.len == self.maxLength:
-                preHash = self.popPage()
-            else:
-                self.len += 1
-
-            if self.MRU_ptr != None:
-                newNode.next = self.MRU_ptr
-                self.MRU_ptr.prev = newNode
-                self.MRU_ptr = newNode
-            else:
-                self.MRU_ptr = self.LRU_ptr = newNode
-
-        return newNode, preHash
-
-    def popPage(self):
-        preNode = self.LRU_ptr.prev
-        tempHash = self.LRU_ptr.hashKey
-        t = self.LRU_ptr
-
-        self.LRU_ptr.prev = None
-        if preNode != None:
-            preNode.next = None
-            self.LRU_ptr = preNode
-        else:
-            self.MRU_ptr = self.LRU_ptr = None
-
-        del t
-        return tempHash
-
-    def updatePage(self, address):
-        currentNode = address
-        if self.len == 1 or self.MRU_ptr == currentNode:
-            return currentNode
-
-        prevNode = currentNode.prev
-        if currentNode != self.LRU_ptr:
-            nextNode = currentNode.next
-
-            currentNode.prev = currentNode.next = None
-            prevNode.next = nextNode
-            nextNode.prev = prevNode
-        else:
-            prevNode.next = None
-            self.LRU_ptr = prevNode
-
-        currentNode.next = self.MRU_ptr
-        self.MRU_ptr.prev = currentNode
-        self.MRU_ptr = currentNode
+    def insert(self, key, value):
+        leftNode, rightNode = self.head, self.head.right
+        newNode = DLL.Node(key, value, leftNode, rightNode)
+        leftNode.right = newNode
+        rightNode.left = newNode
+        self.len += 1
+        return newNode
 
 
 class LRUCache:
     def __init__(self, capacity):
-        self.cache = DLL(capacity)
-        self.hashMap = defaultdict(lambda: None)
+        self.capacity = capacity
+        self.pages = DLL()
+        self.hashMap = {}
 
-    def get(self, key):
-        nodeAddress = self.hashMap[key]
-
-        if nodeAddress != None:
-            self.cache.updatePage(nodeAddress)
-            return nodeAddress.data
-
-        else:
-            del self.hashMap[key]
+    def get(self, key: int) -> int:
+        if key not in self.hashMap:
             return -1
 
-    def set(self, key, value):
-        nodeAddress = self.hashMap[key]
+        oldNode = self.hashMap[key]
+        self.pages.delete(oldNode)
+        newNode = self.pages.insert(key, oldNode.data)
+        self.hashMap[key] = newNode
+        return newNode.data
+    
+    def put(self, key: int, value: int) -> None:
+        if key in self.hashMap:
+            node = self.hashMap[key]
+            self.pages.delete(node)
+            
+        elif len(self.hashMap) == self.capacity:
+            oldKey, _ = self.pages.deleteLast()
+            del self.hashMap[oldKey]
 
-        if nodeAddress == None:
-            newNode, prevHash = self.cache.pushPage(value, key)
-            self.hashMap[key] = newNode
-            if prevHash != None:
-                del self.hashMap[prevHash]
-
-        else:
-            self.cache.updatePage(nodeAddress)
-
+        newNode = self.pages.insert(key, value)
+        self.hashMap[key] = newNode
 
 class LRUCache2:
     def __init__(self, capacity: int):
@@ -124,12 +116,15 @@ class LRUCache2:
 
 
 if __name__ == "__main__":
-    lru = LRUCache(2)
-    lru.set(1, 2)
-    lru.set(2, 3)
-    lru.set(1, 5)
-    lru.set(4, 5)
-
-    print(lru.get(4))
-    lru.set(1, 2)
+    lru = LRUCache(3)
+    lru.set(1, 10)
+    lru.set(3, 15)
+    print(lru.get(1))
+    lru.set(2, 12)
     print(lru.get(3))
+    lru.set(4, 20)
+    print(lru.get(2))
+    print(lru.get(4))
+    print(lru.get(1))
+    lru.set(4, 25)
+

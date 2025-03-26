@@ -5,46 +5,36 @@ class ListNode:
 		self.next = None
 
 class Solution:
-	# @param A : head node of linked list
-	# @param B : integer
-	# @param C : integer
-	# @return the head node in the linked list
-	def reverseBetween(self, root, m, n):
-		if not root or not root.next:
-			return root
-
-		count = 0
-		prev = None
-		ptr = root
-		newHead = None
-
-		while count < m-1:
-			prev = ptr
-			ptr = ptr.next
-			count += 1
-
-		prevNode = currentNode = None
-		nextNode = ptr
-
-		while nextNode and count < n:
-			prevNode = currentNode
-			currentNode = nextNode
-			nextNode = nextNode.next
-
-			currentNode.next = prevNode
-
-			count += 1
-
-		if prev == None:
-			newHead = currentNode
-			root.next = nextNode
-			return newHead
-
-		else:
-			tail = prev.next
-			prev.next = currentNode
-			tail.next = nextNode
-			return root
+    def reverseBetween(self, head: ListNode, left: int, right: int) -> ListNode:
+        if not head or not head.next:
+            return head
+        
+        dummy = ptr = ListNode(None, head)
+        for _ in range(left - 1):
+            ptr = ptr.next
+        
+        leftTail = ptr
+        revTail = ptr.next
+        
+        # revserse
+        prevNode = currNode = None
+        nextNode = ptr.next
+        for _ in range(right - left + 1):
+            prevNode = currNode
+            currNode = nextNode
+            nextNode = nextNode.next
+            currNode.next = prevNode
+        
+        revHead = currNode
+        rightHead = nextNode
+        
+        # linking
+        leftTail.next = revHead
+        revTail.next = rightHead
+        
+        return dummy.next
+# Time Complexity: O(N)
+# Space Complexity: O(1)
 
 
 root = ListNode(1)
