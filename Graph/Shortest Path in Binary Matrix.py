@@ -24,6 +24,7 @@
 
 
 from collections import deque
+import heapq
 from typing import List
 
 
@@ -32,27 +33,39 @@ class Solution:
         if grid[0][0] == 1 or grid[-1][-1] == 1:
             return -1
         
-        ROWS, COLS = len(grid), len(grid[0])
-        DX = [0, 1, 0, -1, 1, 1, -1, -1]
-        DY = [1, 0, -1, 0, 1, -1, 1, -1]
-        queue = deque([(0, 0, 1)])
-        grid[0][0] = 1
+        N = len(grid)
+        if N == 1:
+            return 1
 
-        while queue:
-            i, j, dist = queue.popleft()
+        dx = (0, 1, 0, -1, 1, 1, -1, -1)
+        dy = (1, 0, -1, 0, 1, -1, 1, -1)
 
-            if i == ROWS - 1 and j == COLS - 1:
-                return dist
-
-            for del_x, del_y in zip(DX, DY):
-                x, y = i + del_x, j + del_y
-                if 0 <= x < ROWS and 0 <= y < COLS and grid[x][y] == 0:
-                    grid[x][y] = 1
-                    queue.append((x, y, dist + 1))
+        zeroCoords = [(1, 0, 0)]
+        dist = [[float('inf')] * N for _ in range(N)]
+        dist[0][0] = 1
         
+        while zeroCoords:
+            d, x, y = heapq.heappop(zeroCoords)
+
+            for delX, delY in zip(dx, dy):
+                newX = x + delX
+                newY = y + delY
+                
+                if 0>newX or newX >= N or newY < 0 or newY >= N:
+                    continue
+                
+                if grid[newX][newY] == 1:
+                    continue
+                
+                if newX == N - 1 and newY == N - 1:
+                    return d + 1
+
+                if dist[newX][newY] > d + 1:
+                    dist[newX][newY] = d + 1
+                    heapq.heappush(zeroCoords, (d + 1, newX, newY))
         return -1
-# Time Complexity: O(N^2)
-# Space Complexity: O(2 * N) = O(N)
+# Time Complexity: O(N^2logN)
+# Space Complexity: O(N^2)
 
 
 if __name__ == '__main__':

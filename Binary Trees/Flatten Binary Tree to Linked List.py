@@ -52,4 +52,31 @@ class Solution:
         return self.head.right
 # Time Complexity: O(N)
 # Space Complexity: O(H)
+
+    # Diff approach
+    def flatten(self, root: Optional[TreeNode]) -> None:
+        """
+        Do not return anything, modify root in-place instead.
+        """
+
+        if root is None:
+            return None, None
+
+        left = self.flatten(root.left)
+        right = self.flatten(root.right)
+
+        head = tail = root
+        root.left = None
+        
+        if left[0]:
+            tail.right = left[0]
+            tail = left[1]
+        
+        if right[0]:
+            tail.right = right[0]
+            tail = right[1]
+        
+        return head, tail
+# Time Complexity: O(N)
+# Space Complexity: O(H)
         

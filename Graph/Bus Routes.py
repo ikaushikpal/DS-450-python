@@ -23,37 +23,46 @@ from typing import List
 from collections import defaultdict, deque
 
 
-class Graph:
-    def __init__(self):
-        self.graph = defaultdict(list)
-    
-    def bfs(self, source, target):
-        visited = set()
-        visited.add(source)
-        queue = deque([(0, source)])
-
-        while queue:
-            dist, node = queue.popleft()
-            
-            if node == target:
-                return dist
-            
-            for neighbor in self.graph[node]:
-                if neighbor not in visited:
-                    visited.add(neighbor)
-                    queue.append((dist + 1, neighbor))
-        return -1
-
-
 class Solution:
     def numBusesToDestination(self, routes: List[List[int]], source: int, target: int) -> int:
-        g = Graph()
-        for route in routes:
-            for bus in route:
-                g.graph[bus].extend(route)
-        
-        return g.bfs(source, target)
+        if source == target:
+            return 0
 
+        graph = defaultdict(list)
+
+        for busId, route in enumerate(routes):
+            for busStop in route:
+                graph[busStop].append(busId)
+        
+        if source not in graph or target not in graph:
+            return -1
+        
+        queue = deque([(source, 0)])
+        bus = set()
+        stop = set()
+
+        while queue:
+            stoppage, cost = queue.popleft()
+
+            for busId in graph[stoppage]:
+                if busId in bus:
+                    continue
+                
+                bus.add(busId)
+
+                for busStop in routes[busId]:
+                    if busStop in stop:
+                        continue
+                    
+                    if busStop == target:
+                        return cost + 1 
+                    
+                    queue.append((busStop, cost + 1))
+                    stop.add(busStop)
+        return -1
+# Time Complexity: O(V + E)
+# Space Complexity: O(V + E)
+        
 
 if __name__ == '__main__':
     s = Solution()

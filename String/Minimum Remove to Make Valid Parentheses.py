@@ -32,23 +32,32 @@ from collections import deque
 
 class Solution:
     def minRemoveToMakeValid(self, s: str) -> str:
-        res = [''] * len(s)
         stack = deque()
-        
-        for i, char in enumerate(s):
-            if char == '(':
-                stack.append(i)
-                
-            elif char == ')':
-                if stack:
-                    res[stack.pop()] = '('
-                    res[i] = ')'
-                    
-            else:
-                res[i] = char
-        
-        return ''.join(res)
+        opened = 0
 
+        for c in s:
+            if c == '(':
+                opened += 1
+            elif c == ')':
+                if opened <= 0: continue
+                opened -= 1
+            stack.append(c)
+        
+        opened = 0
+        ans = []
+        while stack:
+            c = stack.pop()
+
+            if c == ')':
+                opened -= 1
+            elif c == '(':
+                if opened >= 0: continue
+                opened += 1
+            ans.append(c)
+
+        return ''.join(ans[::-1])
+# Time Complexity: O(N)
+# Space Complexity: O(N)
 
 
 if __name__ == '__main__':

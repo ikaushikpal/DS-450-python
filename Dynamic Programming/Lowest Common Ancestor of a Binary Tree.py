@@ -41,3 +41,30 @@ class Solution:
         
         if i == -1 and j == -1: return None # if no lca found
         else : return p_list[i+1]
+
+
+# Diff approach
+class Solution:
+    def dfs(self, root, p, q):
+        if root is None:
+            return False, False
+
+        left = self.dfs(root.left, p, q)
+        right = self.dfs(root.right, p, q)
+
+        p_found = root.val == p.val or left[0] or right[0]
+        q_found = root.val == q.val or left[1] or right[1]
+
+        if p_found and q_found:
+            self.ans = root
+            return False, False
+        
+        return p_found, q_found
+
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        self.ans = None
+        self.dfs(root, p, q)
+        return self.ans
+# Time Complexity: O(N)
+# Space Complexity: O(N)
+        

@@ -27,29 +27,46 @@ from typing import List
 
 
 class Solution:
-    def dfs(self, u, graph, safeNodes):
-        if u in safeNodes:
-            return safeNodes[u]
-        
-        safeNodes[u] = False
+    def dfs(self, vertex, visited, stack, safe, graph):
+        visited[vertex] = True
+        stack[vertex] = True
 
-        for v in graph[u]:
+        # initially vertex is not safe node
+        safe[vertex] = False
 
-            if not self.dfs(v, graph, safeNodes):
-                return False
+        for neighbour in graph[vertex]:
+            if not visited[neighbour]:
+                if self.dfs(neighbour, visited, stack, safe, graph):
+                    return True
+            
+            # have found cycle
+            if stack[neighbour]:
+                return True
 
-        safeNodes[u] = True
-        return True
+        stack[vertex] = False
+
+        # at end will only come is no cycle is detected then vertex is safe
+        safe[vertex] = True
+        return False   
 
     def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
-        safeNodes = {}
-        res = []
+        V = len(graph)
+        visited = [False] * V # mark if vertex is visited
+        stack = [False] * V # mark if vertex is in stack, for cycle detection
+        safe = [False] * V # mark if vertex is safe
+        # safe node is a node that has no outgoing edge
 
-        for i in range(len(graph)):
-            if self.dfs(i, graph, safeNodes):
-                res.append(i)
+        for i in range(V):
+            if not visited[i]:
+                self.dfs(i, visited, stack, safe, graph)
         
-        return res
+        ans = []
+        for i, isSafe in enumerate(safe):
+            if isSafe:
+                ans.append(i)
+        return ans
+# Time Complexity : O(V + E)
+# Space Complexity : O(V)
 
 
 if __name__ == '__main__':

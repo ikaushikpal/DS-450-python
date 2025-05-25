@@ -1,43 +1,63 @@
+# You are given a string s. We want to partition the string into as many parts as possible so that each letter appears in at most one part. For example, the string "ababcc" can be partitioned into ["abab", "cc"], but partitions such as ["aba", "bcc"] or ["ab", "ab", "cc"] are invalid.
+
+# Note that the partition is done so that after concatenating all the parts in order, the resultant string should be s.
+
+# Return a list of integers representing the size of these parts.
+
+# Example 1:
+# Input: s = "ababcbacadefegdehijhklij"
+# Output: [9,7,8]
+# Explanation:
+# The partition is "ababcbaca", "defegde", "hijhklij".
+# This is a partition so that each letter appears in at most one part.
+# A partition like "ababcbacadefegde", "hijhklij" is incorrect, because it splits s into less parts.
+
+# Example 2:
+# Input: s = "eccbbbbdec"
+# Output: [10]
+
+
+# Constraints:
+# 1 <= s.length <= 500
+# s consists of lowercase English letters.
+
+from typing import List
+
+
 class Solution:
-    def partitionLabels(self, string: str):
-        start = {}
-        end = {}
+    def partitionLabels(self, s: str) -> List[int]:
+        # converted this problem to intervals one
+        locs = {}
 
-        for i, s in enumerate(string):
-            if s not in start:
-                start[s] = i
-                end[s] = i
-
+        for i, char in enumerate(s):
+            if char not in locs:
+                locs[char] = [i, i]
             else:
-                end[s] = i
+                start, end = locs[char]
+                locs[char] = [start, i]
 
-        res = []
-        pat_start, pat_end = -1, -1
-        
-        for key in start:
-            if pat_end < start[key]:
-                # new partition
-                width = pat_end - pat_start + 1
-                res.append(width)
+        intervals = [tuple(interval) for interval in locs.values()]
 
-                pat_start = start[key]
-                pat_end = end[key]
+        ans = []
+        prev_start = prev_end = -1
 
-            # if this character completely lies in current partition
-            elif pat_start <= start[key] and end[key] <= pat_end:
-                continue
-
-            # partially lies in range
+        for start, end in intervals:
+            if start > prev_end:
+                ans.append(prev_end - prev_start + 1)
+                prev_start, prev_end = start, end
             else:
-                pat_end = end[key]
+                prev_start = min(start, prev_start)
+                prev_end = max(end, prev_end)
+        ans.append(prev_end - prev_start + 1)
 
-        width = pat_end - pat_start + 1
-        res.append(width)
-
-        return res[1:]
+        return ans[1:]
 
 
-if __name__ == '__main__':
+# Time complexity: O(N)
+# Space Complexity: O(N)
+
+
+if __name__ == "__main__":
     sol = Solution()
     print(sol.partitionLabels("ababcbacadefegdehijhklij"))
     print(sol.partitionLabels("eccbbbbdec"))

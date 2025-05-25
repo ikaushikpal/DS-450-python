@@ -26,23 +26,31 @@
 # countAndSay(4) = say "21" = one 2 + one 1 = "12" + "11" = "1211"
 
 class Solution:
+    cache = {}
+
+    def rle(self, s):
+        value = s[0]
+        freq = 1
+        ans = []
+
+        for i in range(1, len(s)):
+            if value == s[i]:
+                freq += 1
+            else:
+                ans.append(f'{freq}{value}')
+                freq =  1
+                value = s[i]
+        ans.append(f'{freq}{value}')
+        return ''.join(ans)
+
     def countAndSay(self, n: int) -> str:
-        output = '1'
-        
-        for _ in range(1, n):
-            count, val = 1, output[0]
-            newOutput = ''
-            
-            for j in range(1, len(output)):
-                if output[j] == val:
-                    count += 1
-                else:
-                    newOutput += f'{count}{val}'
-                    count, val = 1, output[j]
-            
-            output = f'{newOutput}{count}{val}'
-        
-        return output
+        ans = '1'
+
+        for i in range(1, n):
+            if i not in self.cache:
+                self.cache[i] = self.rle(ans)
+            ans = self.cache[i]
+        return ans
 
 # Time Complexity: O(m * n) where m is the length of the output string and n is the number of iterations.
 # Space Complexity: O(m) where m is the length of the output string.
